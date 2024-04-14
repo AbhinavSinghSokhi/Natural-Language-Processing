@@ -4,14 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
 </head>
 <body>
+<section>
+    <div>
+        <h1>NLP Nexus</h1>
+    </div>
+</section>
 
 <div>
     <form action="promptProcessing" method="post">
         {% csrf_token %}
         <div>
             <label for="prompt">Ask Anything: </label>
+        </div>
+        <div>
             <input type="text" name="prompt" class="prompt_input" id="prompt" placeholder="Message Gemini..">
         </div>
         <div>
@@ -19,8 +28,26 @@
         </div>
     </form>
 </div>
-{% if prompt %}
+<!-- {% if prompt %}
 <p>Your prompt was : {{ prompt }}</p>
-{% endif %}
+{% endif %} -->
+    {% if response %}
+        <h2>The Response is:</h2>
+        {% for chunk in response %}
+            <p id="response">{{ chunk.text }}</p>
+        {% endfor %}
+        <br>
+        <h2>NLP Statistics</h2>
+        <p>The text response from the bot includes: </p>
+        <p><bold>{{ tokens }}</bold> Tokens.</p>
+        <p><bold>{{ stopwords }}</bold> Stop Words.</p>
+
+        <p id="entities_heading">Named Entities</p>
+        <ul>
+        {% for entity , labels in entities %}
+            <li id="entities_content">Entity: {{ entity }} , Label: {{labels}}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
 </body>
 </html>
